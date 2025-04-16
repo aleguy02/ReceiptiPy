@@ -1,2 +1,6 @@
-.env/
+# directories
+myenv/
 __pycache__/
+
+# environment variables
+.env
