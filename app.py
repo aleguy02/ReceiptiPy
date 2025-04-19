@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 import requests
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, session, url_for
 from urllib import parse
 import base64
 
@@ -12,14 +12,18 @@ load_dotenv()
 CLIENT_ID: str = os.getenv("CLIENT_ID")
 CLIENT_SECRET: str = os.getenv("CLIENT_SECRET")
 REDIRECT_URI: str = os.getenv("REDIRECT_URI")
+FLASK_SECRET_KEY: str = os.getenv("FLASK_SECRET_KEY")
 
 app = Flask(__name__)
+app.secret_key = FLASK_SECRET_KEY
 
 
 # redirect depending on sign-in state
 @app.route("/")
-def redir():
-    return "<p>Hello, World!</p>"
+def index():
+    if "access_token" in session:
+        return redirect(url_for("home"))
+    return redirect(url_for("login_to_spotify"))
 
 
 @app.route("/login")
@@ -44,28 +48,41 @@ def login_to_spotify():
 
 @app.route("/callback", methods=["GET", "POST"])
 def exchange_auth_code_for_access_token():
-    # auth_code, state = request.args.get("code"), request.args.get("state")
-    auth_code = request.args.get("code")
-    payload = {
-        "grant_type": "authorization_code",
-        "code": auth_code,
-        "redirect_uri": REDIRECT_URI,
-    }
+    try:
+        # auth_code, state = request.args.get("code"), request.args.get("state")
+        auth_code: str = request.args.get("code")
+        payload: dict = {
+            "grant_type": "authorization_code",
+            "code": auth_code,
+            "redirect_uri": REDIRECT_URI,
+        }
 
-    # Make sure to decode the b64 encoded value to pass a string instead of bytes to Authorization
-    auth_header = base64.b64encode(
-        (CLIENT_ID + ":" + CLIENT_SECRET).encode("utf-8")
-    ).decode()  # this article was helpful: https://ioflood.com/blog/python-base64-encode/
-    print(auth_header)
-    headers = {
-        "Authorization": f"Basic {auth_header}",
-        "Content-Type": "application/x-www-form-urlencoded",
-    }
-    post_request = requests.post(
-        "https://accounts.spotify.com/api/token", data=payload, headers=headers
-    )
+        # Make sure to decode the b64 encoded value to pass a string instead of bytes to Authorization
+        auth_header: str = base64.b64encode(
+            (CLIENT_ID + ":" + CLIENT_SECRET).encode("utf-8")
+        ).decode()  # this article was helpful: https://ioflood.com/blog/python-base64-encode/
+        print(auth_header)
+        headers: dict = {
+            "Authorization": f"Basic {auth_header}",
+            "Content-Type": "application/x-www-form-urlencoded",
+        }
+        post_request = requests.post(
+            "https://accounts.spotify.com/api/token", data=payload, headers=headers
+        )
+        response: dict = post_request.json()
+        if not response or not response["access_token"]:
+            raise Exception("Spotify API Response not found")
+        access_token: str = response["access_token"]
+        session["access_token"] = access_token
 
-    return f"<p>${post_request.text}<p>"
+        return redirect(url_for("index"))
+    except Exception as e:
+        return f"<h1>Exception occurred</h1><p>{str(e)}<p>"
+
+
+@app.route("/haikus")
+def home():
+    return f"<p>hello world</p>"
 
 
 if __name__ == "__main__":
