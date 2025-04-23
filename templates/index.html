@@ -2,49 +2,86 @@
 <html lang="en">
   <head>
     {% block head %}
-    <title>My Spotify Haiku</title>
+    <title>Recieptipy</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     {% endblock %}
   </head>
   <body>
     <div id="content">
-      <button id="start">Get started</button>
-
-      <div id="main-content" style="display: none">
-        <h2>{{ spotify.name }} by {{ spotify.artist }}</h2>
-        <label for="lyrics">Paste in lyrics here:</label>
-        <input type="text" id="lyrics" name="lyrics" /><br /><br />
-        <button id="write">Write my haiku</button>
+      <div id="main-content" class="self-center flex justify-center flex-col">
+        <div id="heading">
+          <!-- Title, user, date -->
+          <h2>Recieptipy</h2>
+          <p>{{ dummy.username }}</p>
+          <p>Wed, April 23, 2025</p>
+        </div>
+        <div id="track-list">
+          {% for track in dummy.tracklist %}
+          <div id="track1" class="bg-red-400 flex flex-row">
+            <!-- number, name - artist, length -->
+            <p>{{ loop.index }}</p>
+            <p>{{ track.name }}</p>
+            <p>{{ track.artist }}</p>
+          </div>
+          <!-- 10 tracks total -->
+          {% endfor %}
+        </div>
+        <div id="footing">
+          <!-- track count, total length, user -->
+          <p>Item Count: {{ dummy.tracklist|length }}</p>
+          <p>{{ dummy.username }}</p>
+        </div>
       </div>
     </div>
-    <div id="footer">
-      {% block footer %} Made with ❤️ by
-      <a href="https://aleguy02.dev">Alejandro Villate</a>. {% endblock %}
+    <div
+      id="footer"
+      class="self-center flex justify-center items-center mt-auto"
+    >
+      <p>
+        Made with ❤️ by
+        <a href="https://aleguy02.dev" class="text-blue-500 hover:underline"
+          >Alejandro Villate</a
+        >.
+      </p>
     </div>
 
     <script>
-      const startButton = document.getElementById('start');
-      const mainContent = document.getElementById('main-content');
-      const writeButton = document.getElementById('write');
+      // const startButton = document.getElementById('start');
+      // const mainContent = document.getElementById('main-content');
+      // const writeButton = document.getElementById('write');
 
-      startButton.addEventListener('click', () => {
-        startButton.style.display = 'none';
-        mainContent.style.display = 'block';
-      });
+      // const lyricsInput = document.getElementById('lyrics');
 
-      writeButton.addEventListener('click', async () => {
-        writeButton.disabled = true;
-        try {
-          const response = await fetch('/api/makehaiku', { method: 'POST' });
-          if (!response.ok) {
-            throw new Error(`Response status: ${response.status}`);
-          }
-          console.log(response);
-        } catch (error) {
-          console.error(error.message);
-        } finally {
-          writeButton.disabled = false;
-        }
-      });
+      // startButton.addEventListener('click', () => {
+      //   startButton.style.display = 'none';
+      //   mainContent.style.display = 'block';
+      // });
+
+      // writeButton.addEventListener('click', async () => {
+      //   writeButton.disabled = true;
+      //   try {
+      //     if (lyricsInput.value < 28) {
+      //       alert(
+      //         'The song must have at least 28 words, twice the length of the number of syllables in a haiku 🪶'
+      //       );
+      //       return;
+      //     }
+      //     const response = await fetch('/api/makehaiku', {
+      //       method: 'POST',
+      //       headers: { 'Content-Type': 'application/json' },
+      //       body: JSON.stringify({ lyrics: lyricsInput.value }),
+      //     });
+      //     if (!response.ok) {
+      //       console.error('POST request unsuccessful');
+      //       throw new Error(`Response status: ${response.status}`);
+      //     }
+      //     console.log(response);
+      //   } catch (error) {
+      //     console.error(error.message);
+      //   } finally {
+      //     writeButton.disabled = false;
+      //   }
+      // });
     </script>
   </body>
 </html>
