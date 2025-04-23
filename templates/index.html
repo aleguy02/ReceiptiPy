@@ -2,34 +2,69 @@
 <html lang="en">
   <head>
     {% block head %}
-    <title>Recieptipy</title>
+    <title>ReceiptiPy</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     {% endblock %}
   </head>
-  <body>
-    <div id="content">
-      <div id="main-content" class="self-center flex justify-center flex-col">
-        <div id="heading">
-          <!-- Title, user, date -->
-          <h2>Recieptipy</h2>
-          <p>{{ dummy.username }}</p>
-          <p>Wed, April 23, 2025</p>
+  <body style="background-color: rgb(26, 26, 26)">
+    <div id="content" class="flex justify-center p-5">
+      <div
+        id="main-content"
+        class="flex flex-col p-10 items-center gap-10 text-slate-50 text-xl"
+      >
+        <div
+          id="heading"
+          class="flex flex-col px-29px py-87px items-center gap-2"
+        >
+          <!-- title, user, date -->
+          <div
+            id="ReceiptiPy"
+            class="flex w-3xs h-24 px-25px py 30px justify-center items-center gap-2 bg-green-600 rounded-full"
+          >
+            <p class="font-bold user text-3xl">RecieptiPy</p>
+          </div>
+          <div
+            id="info"
+            class="flex flex-col px-25 py-30px justify-center items-center gap-2"
+          >
+            <p class="user font-extrabold">{{ user.displayName }}</p>
+            <p class="user">Wed, April 23, 2025</p>
+          </div>
         </div>
-        <div id="track-list">
-          {% for track in dummy.tracklist %}
-          <div id="track1" class="bg-red-400 flex flex-row">
-            <!-- number, name - artist, length -->
-            <p>{{ loop.index }}</p>
-            <p>{{ track.name }}</p>
-            <p>{{ track.artist }}</p>
+        <div id="track-list" class="flex flex-col px-29px items-center gap-2">
+          {% for track in user.tracklist %}
+          <div class="flex w-md items-center gap-4">
+            <!-- index, name - artist, length -->
+            <p class="w-12 shrink-0 font-extrabold">{{ loop.index }}</p>
+            <div class="flex flex-[1_0_0] px-10px items-start gap-2">
+              <p>
+                {{ track.name }} - {% for artist in track.artists %}{{ artist
+                }}{% if not loop.last %}, {% endif %}{% endfor %}
+              </p>
+            </div>
+            <p class="w-12 shrink-0 text-right">
+              {{ track.duration_s // 60 }}:{{ '%02d' % (track.duration_s % 60)
+              }}
+            </p>
           </div>
           <!-- 10 tracks total -->
           {% endfor %}
         </div>
-        <div id="footing">
+        <div
+          id="footing"
+          class="flex flex-col pl-12 items-center gap-2 self-stretch"
+        >
           <!-- track count, total length, user -->
-          <p>Item Count: {{ dummy.tracklist|length }}</p>
-          <p>{{ dummy.username }}</p>
+          <div
+            class="bg-gray-500 flex flex-col px-8 py-4 justify-center items-end gap-2 self-stretch rounded-sm"
+          >
+            <p class="font-bold">Item Count: {{ user.tracklist|length }}</p>
+            <p class="font-bold">
+              Total: {{ user.tracklist|map(attribute='duration_s')|sum // 60
+              }}:{{ '%02d' % (user.tracklist|map(attribute='duration_s')|sum %
+              60) }}
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -37,7 +72,7 @@
       id="footer"
       class="self-center flex justify-center items-center mt-auto"
     >
-      <p>
+      <p class="text-slate-50">
         Made with ❤️ by
         <a href="https://aleguy02.dev" class="text-blue-500 hover:underline"
           >Alejandro Villate</a
