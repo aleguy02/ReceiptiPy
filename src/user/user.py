@@ -22,12 +22,6 @@ class User:
     ) -> None:
         """
         Call Spotify API to load user spotify_obj object if it is not already loaded.
-
-        Format:
-        {
-            "username": string,
-            "tracklist": [{ "name": string, "artists": array of strings, "duration_s": integer }, ... ]
-        }
         """
         if self.is_loaded:
             return
@@ -62,23 +56,15 @@ class User:
 
         # set spotify_obj after all requests were successful
         self.spotify_obj["displayName"] = user_info_response.json().get("display_name")
-
-        # dummy_data = {
-        #     "username": "aleguy02",
-        #     "tracklist": [
-        #         {"name": "Denver", "artist": "Jack Harlow", "duration_s": 158},
-        #         {"name": "Hurts Me", "artist": "Tory Lanez", "duration_s": 158},
-        #     ],
-        # }
         tracklist = []
-        for item in tracks_response.json().get("items"):
+        for track_object in tracks_response.json().get("items"):
             tracklist.append(
                 {
-                    "name": item.get("name"),
-                    "artists": [artist.get("name") for artist in item.get("artists")],
-                    "duration_s": item.get("duration_ms") // 1000,
+                    "name": track_object.get("name"),
+                    "artists": [artist.get("name") for artist in track_object.get("artists")],
+                    "duration_s": track_object.get("duration_ms") // 1000,
+                    "url": track_object.get("external_urls").get("spotify")
                 }
             )
         self.spotify_obj["tracklist"] = tracklist
-
-        print(self.spotify_obj)
+        self.is_loaded = True

@@ -1,6 +1,7 @@
 import requests
 from flask import Flask, request, redirect, session, url_for, render_template, jsonify
 from urllib import parse
+from datetime import date
 
 # from src.utils import generate_random_string
 from src.utils import generate_auth_header
@@ -82,10 +83,11 @@ def home():
 
     try:
         user.load_spotify(session["access_token"])
+        today = date.today().strftime("%a, %B %d, %Y")
     except AuthError as e:
         session.pop("access_token", None)
         return redirect(url_for("index"))
-    return render_template("index.html", user=user.spotify_obj)
+    return render_template("index.html", user=user.spotify_obj, fdate=today)
 
 
 if __name__ == "__main__":

@@ -21,14 +21,14 @@
             id="ReceiptiPy"
             class="flex w-3xs h-24 px-25px py 30px justify-center items-center gap-2 bg-green-600 rounded-full"
           >
-            <p class="font-bold user text-3xl">RecieptiPy</p>
+            <p class="font-bold text-3xl">RecieptiPy</p>
           </div>
           <div
             id="info"
             class="flex flex-col px-25 py-30px justify-center items-center gap-2"
           >
-            <p class="user font-extrabold">{{ user.displayName }}</p>
-            <p class="user">Wed, April 23, 2025</p>
+            <p class="font-extrabold">{{ user.displayName }}</p>
+            <p>{{ fdate }}</p>
           </div>
         </div>
         <div id="track-list" class="flex flex-col px-29px items-center gap-2">
@@ -36,11 +36,14 @@
           <div class="flex w-md items-center gap-4">
             <!-- index, name - artist, length -->
             <p class="w-12 shrink-0 font-extrabold">{{ loop.index }}</p>
+
             <div class="flex flex-[1_0_0] px-10px items-start gap-2">
-              <p>
-                {{ track.name }} - {% for artist in track.artists %}{{ artist
-                }}{% if not loop.last %}, {% endif %}{% endfor %}
-              </p>
+              <a href="{{ track.url }}" target="_blank">
+                <p>
+                  {{ track.name }} - {% for artist in track.artists %} {{ artist
+                  }}{% if not loop.last %}, {% endif %} {% endfor %}
+                </p>
+              </a>
             </div>
             <p class="w-12 shrink-0 text-right">
               {{ track.duration_s // 60 }}:{{ '%02d' % (track.duration_s % 60)
@@ -74,7 +77,10 @@
     >
       <p class="text-slate-50">
         Made with ❤️ by
-        <a href="https://aleguy02.dev" class="text-blue-500 hover:underline"
+        <a
+          href="https://aleguy02.dev"
+          target="_blank"
+          class="text-blue-500 hover:underline"
           >Alejandro Villate</a
         >.
       </p>
