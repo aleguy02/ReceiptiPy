@@ -7,7 +7,6 @@ from src.utils import generate_auth_header
 from src.config.config import Config
 from src.user.user import User, AuthError
 
-
 user = User()
 app = Flask(__name__)
 app.secret_key = Config.FLASK_SECRET_KEY
@@ -72,7 +71,9 @@ def exchange():
 def home():
     if "access_token" not in session:
         return redirect(url_for("login_to_spotify"))
-    return render_template("index.html", user=user)
+
+    user.load_spotify(session["access_token"])
+    return render_template("index.html", spotify=user.spotify_obj)
 
 
 @app.route("/api/makehaiku", methods=["POST"])
@@ -81,8 +82,7 @@ def generate_haiku():
     Generate a haiku from the lyrics of the user's top track
     """
     try:
-        user.load_spotify(session["access_token"])
-        # response = user.generate_haiku()
+        pass
     except AuthError as e:
         session.pop("access_token", None)
         return redirect(url_for("index"))

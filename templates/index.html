@@ -7,7 +7,14 @@
   </head>
   <body>
     <div id="content">
-      <button id="btn">Write my haiku</button>
+      <button id="start">Get started</button>
+
+      <div id="main-content" style="display: none">
+        <h2>{{ spotify.name }} by {{ spotify.artist }}</h2>
+        <label for="lyrics">Paste in lyrics here:</label>
+        <input type="text" id="lyrics" name="lyrics" /><br /><br />
+        <button id="write">Write my haiku</button>
+      </div>
     </div>
     <div id="footer">
       {% block footer %} Made with ❤️ by
@@ -15,9 +22,17 @@
     </div>
 
     <script>
-      const btn = document.getElementById('btn');
-      btn.addEventListener('click', async () => {
-        btn.disabled = true;
+      const startButton = document.getElementById('start');
+      const mainContent = document.getElementById('main-content');
+      const writeButton = document.getElementById('write');
+
+      startButton.addEventListener('click', () => {
+        startButton.style.display = 'none';
+        mainContent.style.display = 'block';
+      });
+
+      writeButton.addEventListener('click', async () => {
+        writeButton.disabled = true;
         try {
           const response = await fetch('/api/makehaiku', { method: 'POST' });
           if (!response.ok) {
@@ -27,7 +42,7 @@
         } catch (error) {
           console.error(error.message);
         } finally {
-          btn.disabled = false;
+          writeButton.disabled = false;
         }
       });
     </script>
