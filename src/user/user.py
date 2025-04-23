@@ -15,28 +15,70 @@ class AuthError(Exception):
 class User:
     def __init__(self):
         self.spotify_obj = {}
+        self.is_loaded = False
 
     def load_spotify(
-        self, access_token: str, limit: int = 1, time_range: str = "short_term"
+        self, access_token: str, limit: int = 10, time_range: str = "short_term"
     ) -> None:
         """
         Call Spotify API to load user spotify_obj object if it is not already loaded.
+
+        Format:
+        {
+            "username": string,
+            "tracklist": [{ "name": string, "artists": array of strings, "duration_s": integer }, ... ]
+        }
         """
-        # avoid unnecessary api calls
-        if self.spotify_obj.get("name") and self.spotify_obj.get("artist"):
+        if self.is_loaded:
             return
 
-        params = {"limit": limit, "time_range": time_range}
+        # every API call needs an "Authorization: Bearer TOKEN" in the header, so we declare it here
         headers = {"Authorization": f"Bearer {access_token}"}
-        response = requests.get(
+
+        # load user info
+        user_info_response = requests.get(
+            "https://api.spotify.com/v1/me", headers=headers
+        )
+        if not user_info_response.ok:
+            status = user_info_response.status_code
+            raise (
+                AuthError("The access token expired")
+                if status == 401
+                else Exception("Error making request")
+            )
+
+        # load top tracks
+        params = {"limit": limit, "time_range": time_range}
+        tracks_response = requests.get(
             "https://api.spotify.com/v1/me/top/tracks?", params=params, headers=headers
         )
-        if not response.ok:
-            if response.status_code == 401:
-                raise AuthError("The access token expired")
-            raise Exception("Error making request")
+        if not tracks_response.ok:
+            status = tracks_response.status_code
+            raise (
+                AuthError("The access token expired")
+                if status == 401
+                else Exception("Error making request")
+            )
 
-        self.spotify_obj["name"] = response.json().get("items")[0].get("name")
-        self.spotify_obj["artist"] = (
-            response.json().get("items")[0].get("artists")[0].get("name")
-        )
+        # set spotify_obj after all requests were successful
+        self.spotify_obj["displayName"] = user_info_response.json().get("display_name")
+
+        # dummy_data = {
+        #     "username": "aleguy02",
+        #     "tracklist": [
+        #         {"name": "Denver", "artist": "Jack Harlow", "duration_s": 158},
+        #         {"name": "Hurts Me", "artist": "Tory Lanez", "duration_s": 158},
+        #     ],
+        # }
+        tracklist = []
+        for item in tracks_response.json().get("items"):
+            tracklist.append(
+                {
+                    "name": item.get("name"),
+                    "artists": [artist.get("name") for artist in item.get("artists")],
+                    "duration_s": item.get("duration_ms") // 1000,
+                }
+            )
+        self.spotify_obj["tracklist"] = tracklist
+
+        print(self.spotify_obj)

@@ -25,14 +25,15 @@ def login_to_spotify():
     Log user into Spotify
     """
     # Spotify permissions scopes
-    permissions_scope = "user-top-read"
-    query_params = {
-        "response_type": "code",
-        "client_id": Config.CLIENT_ID,
-        "scope": permissions_scope,
-        "redirect_uri": Config.REDIRECT_URI,
-    }
-    auth_url = "https://accounts.spotify.com/authorize?" + parse.urlencode(query_params)
+    permissions_scope = "user-top-read user-read-private user-read-email"
+    auth_url = "https://accounts.spotify.com/authorize?" + parse.urlencode(
+        {
+            "response_type": "code",
+            "client_id": Config.CLIENT_ID,
+            "scope": permissions_scope,
+            "redirect_uri": Config.REDIRECT_URI,
+        }
+    )
     return redirect(auth_url)
 
 
@@ -48,48 +49,43 @@ def exchange():
             "code": auth_code,
             "redirect_uri": Config.REDIRECT_URI,
         }
-
-        auth_header = generate_auth_header()
         headers = {
-            "Authorization": f"Basic {auth_header}",
+            "Authorization": f"Basic {generate_auth_header()}",
             "Content-Type": "application/x-www-form-urlencoded",
         }
+
         response = requests.post(
             "https://accounts.spotify.com/api/token", data=payload, headers=headers
         ).json()
         if not response or not response.get("access_token"):
             raise Exception("Spotify API Response not found")
-        access_token = response["access_token"]
-        session["access_token"] = access_token
+        session["access_token"] = response["access_token"]
 
         return redirect(url_for("home"))
     except Exception as e:
         return f"<h1>Exception occurred</h1><p>{str(e)}<p>"
 
 
-@app.route("/haikus", methods=["GET"])
+dummy_data = {
+    "username": "aleguy02",
+    "tracklist": [
+        {"name": "Denver", "artist": "Jack Harlow"},
+        {"name": "Hurts Me", "artist": "Tory Lanez"},
+    ],
+}
+
+
+@app.route("/receipt", methods=["GET"])
 def home():
     if "access_token" not in session:
         return redirect(url_for("login_to_spotify"))
 
-    user.load_spotify(session["access_token"])
-    return render_template("index.html", spotify=user.spotify_obj)
-
-
-@app.route("/api/makehaiku", methods=["POST"])
-def generate_haiku():
-    """
-    Generate a haiku from the lyrics of the user's top track
-    """
     try:
-        pass
+        user.load_spotify(session["access_token"])
     except AuthError as e:
         session.pop("access_token", None)
         return redirect(url_for("index"))
-    except Exception as e:
-        return f"<h1>Exception occurred</h1><p>{str(e)}<p>"
-
-    return "Hello world"
+    return render_template("index.html", user=user.spotify_obj)
 
 
 if __name__ == "__main__":
