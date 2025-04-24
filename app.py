@@ -76,10 +76,17 @@ dummy_data = {
 }
 
 
-@app.route("/receipt", methods=["GET"])
+@app.route("/receipt", methods=["GET", "POST"])
 def home():
     if "access_token" not in session:
         return redirect(url_for("login_to_spotify"))
+
+    if request.method == "POST":
+        try:
+            user.make_playlist()
+            pass
+        except Exception as e:
+            return e
 
     try:
         user.load_spotify(session["access_token"])

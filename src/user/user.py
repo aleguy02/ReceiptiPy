@@ -68,3 +68,6 @@ class User:
             )
         self.spotify_obj["tracklist"] = tracklist
         self.is_loaded = True
+
+
+    # def make_playlist():
