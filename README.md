@@ -1,52 +1,80 @@
 ![ReceiptiPy](https://socialify.git.ci/aleguy02/ReceiptiPy/image?description=1&font=Jost&language=1&name=1&owner=1&pattern=Plus&stargazers=1&theme=Dark)
+
 # Welcome to ReceiptiPy
+
 ReceiptiPy is a web app that lets users get a list of their top tracks from the past month! This project is my Python/Flask adaptation/reimagining of [Receiptify](https://github.com/michellexliu/receiptify), a popular web app originally made in JavaScript/Express.
 
 ## Tech Stack
+
 [![My Skills](https://skillicons.dev/icons?i=html,tailwind,flask,python,docker)](https://skillicons.dev)
 
 ## Features
-This project is WIP! Features coming soon include:  
+
+This project is WIP! Features coming soon include:
+
 - [x] Getting your top tracks from the past month
 - [ ] Creating a playlist based on your top tracks
 - [ ] Different time ranges for top tracks
 - [ ] Deployment to live site via VPS
 
 ## Prerequisites
+
 - [Python 3.12.x](https://www.python.org/downloads/)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Optional)
-  
+
 ## Running Locally
+
 Fork this project. After forking, run the following commands in your terminal to set it up locally.
+
 ```bash
 git clone FORKED_REPO_URL
 cd cloned_repo
 ```
-Create a new file called `.env` and paste in the contents from `.env_example`. Then, follow the steps to create an app from the [Spotify Web API docs](https://developer.spotify.com/documentation/web-api). For Redirect URIs, put "http://127.0.0.1:5000/callback". From the dashboard, get your Client ID and Client Secret. Finally, generate a random, secure string. This will be your FLASK_SECRET_KEY. After these steps, you're ready to run the app in one of two ways.
+
+Create a new file called `.env` and paste in the contents from `.env_example`. Then, follow the steps to create an app from the [Spotify Web API docs](https://developer.spotify.com/documentation/web-api). For Redirect URIs, put "http://127.0.0.1:5000/callback". Get your Client ID and Client Secret from the Spotify API Dashboard. For your FLASK_SECRET_KEY, generate a secure random key with the following command.
+
+```bash
+$ python -c 'import secrets; print(secrets.token_hex())'
+'192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf'
+```
+
+After these steps, you're ready to run the app in one of two ways.
 
 ### 1) Docker
+
 To run ReceiptiPy in a Docker container, first build an image then run the image in a container.
+
 ```bash
 docker build -t receiptipy .
 docker run -p 5000:5000 receiptipy
 ```
+
+Press `ctrl + c` do stop the container. Read `Dockerfile` for more information
+
 ### 2) Local (Linux)
-You can also just run the app on your machine, it just requires a littlemore setup. First, create a Python virtual machine and activate it (for dependency management).  
+
+You can also just run the app on your machine, it just requires a littlemore setup. First, create a Python virtual machine and activate it (for dependency management).
+
 ```bash
-python3 -m venv myenv
+python -m venv myenv
 source myenv/bin/activate
 ```
-**Note**: You'll know it worked if you now see (myenv) on the left of your username in the terminal. If you are on Windows, you may have to do `myenv\Scripts\Activate.ps1` instead. Read more about virtual environments in the [documentation](https://docs.python.org/3/library/venv.html). You can always deactivate (exit) your virtual environment with `deactivate`.  
+
+**Note**: You'll know it worked if you now see (myenv) on the left of your username in the terminal. If you are on Windows, you may have to do `myenv\Scripts\Activate.ps1` instead. Read more about virtual environments in the [documentation](https://docs.python.org/3/library/venv.html). You can always deactivate (exit) your virtual environment with `deactivate`.
 
 Next, install the dependencies from the `requirements.txt` file.
+
 ```bash
 pip install --upgrade pip && pip install -r requirements.txt
 ```
+
 Finally, run the application with EITHER of the following command.
+
 ```bash
-python3 app.py
+python app.py
 flask run
 ```
 
 ## Acknowledgements
+
 Shout out to [Michelle Liu](https://github.com/michellexliu), the creator of the original ReceiptiPy
