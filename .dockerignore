@@ -1,0 +1,6 @@
+# directories
+myenv/
+__pycache__/
+
+# debug file
+debug.py

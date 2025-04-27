@@ -67,14 +67,6 @@ def exchange():
         return f"<h1>Exception occurred</h1><p>{str(e)}<p>"
 
 
-dummy_data = {
-    "username": "aleguy02",
-    "tracklist": [
-        {"name": "Denver", "artist": "Jack Harlow"},
-        {"name": "Hurts Me", "artist": "Tory Lanez"},
-    ],
-}
-
 
 @app.route("/receipt", methods=["GET", "POST"])
 def home():
