@@ -12,3 +12,6 @@ COPY . .
 
 # running our container
 CMD ["gunicorn", "--bind" , "0.0.0.0:5000", "wsgi:app"]
+
+# Uncomment to run app without gunicorn
+# CMD ["python", "-m" , "flask", "run", "--host=0.0.0.0"]
