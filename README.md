@@ -1,5 +1,3 @@
-![ReceiptiPy](https://socialify.git.ci/aleguy02/ReceiptiPy/image?description=1&font=Jost&language=1&name=1&owner=1&pattern=Plus&stargazers=1&theme=Dark)
-
 # What is SpotiPy?
 
 Logging into SpotiPy lets you see my top ten tracks in the past month! Inspired by Receiptify, I made SpotiPy to jump deploying a Flask app to a VPS from a Docker container.
