@@ -1,8 +1,8 @@
 ![ReceiptiPy](https://socialify.git.ci/aleguy02/ReceiptiPy/image?description=1&font=Jost&language=1&name=1&owner=1&pattern=Plus&stargazers=1&theme=Dark)
 
-# Welcome to ReceiptiPy
+# What is SpotiPy?
 
-ReceiptiPy is a web app that lets users get a list of their top tracks from the past month! This project is my Python/Flask adaptation/reimagining of [Receiptify](https://github.com/michellexliu/receiptify), a popular web app originally made in JavaScript/Express.
+Logging into SpotiPy lets you see my top ten tracks in the past month! Inspired by Receiptify, I made SpotiPy to jump deploying a Flask app to a VPS from a Docker container.
 
 ## Tech Stack
 
@@ -12,10 +12,8 @@ ReceiptiPy is a web app that lets users get a list of their top tracks from the 
 
 This project is WIP! Features coming soon include:
 
-- [x] Getting your top tracks from the past month
-- [ ] Creating a playlist based on your top tracks
-- [ ] Different time ranges for top tracks
-- [ ] Deployment to live site via VPS
+- [x] Getting my top tracks from the past month
+- [ ] Getting YOUR top tracks from the past month
 
 ## Prerequisites
 
