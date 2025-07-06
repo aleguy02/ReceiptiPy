@@ -1,6 +1,6 @@
 # What is SpotiPy?
 
-Logging into SpotiPy lets you see my top ten tracks in the past month! Inspired by Receiptify, I made SpotiPy to jump into deploying a Flask app to a VPS from a Docker container.
+Logging into SpotiPy lets you see my top ten tracks in the past month! Inspired by Receiptify, I made SpotiPy to jump into deploying a Flask app to a VPS from a Docker container. This project was made for practice ahead of my Production Engineering Fellowship and is no longer maintained.
 
 ## Tech Stack
 
